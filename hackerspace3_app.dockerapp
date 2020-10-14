@@ -1,0 +1,50 @@
+# This section contains your application metadata.
+# Version of the application
+version: 0.1.0
+# Name of the application
+name: hackerspace3
+# A short description of the application
+description: GovHack Hackerspace from https://github.com/govhackaustralia/hackerspace3
+# List of application maintainers with name and email for each
+maintainers:
+  - name: Matthew Cengia
+    email: mattcen@govhack.org
+
+---
+# This section contains the Compose file that describes your application services.
+version: '3.1'
+
+services:
+
+  hackerspace3:
+    image: govhackau/hackerspace3
+    environment:
+      POSTGRES_DB: "${postgres.db}"
+      POSTGRES_HOST: postgres
+      POSTGRES_PASSWORD: "${postgres.password}"
+      POSTGRES_USER: "${postgres.user}"
+    ports:
+      - 3000:3000
+    restart: always
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:12.1
+    environment:
+      POSTGRES_DB: "${postgres.db}"
+      POSTGRES_PASSWORD: "${postgres.password}"
+      POSTGRES_USER: "${postgres.user}"
+    volumes:
+      - pg_db:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  pg_db:
+
+---
+# This section contains the default values for your application parameters.
+postgres:
+  db: hackerspace3
+  password: SuperSecretPass
+  user: hackerspace
